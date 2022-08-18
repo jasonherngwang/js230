@@ -1,6 +1,6 @@
 function walk(node, callback) {
-  callback(node) // Perform some action with the node
-  
+  callback(node); // Perform some action with the node
+
   for (let i = 0; i < node.childNodes.length; i += 1) {
     walk(node.childNodes[i], callback);
   }
@@ -28,21 +28,21 @@ let firstWords = [];
 // })
 
 // Using walk
-walk(document, node => {
+walk(document, (node) => {
   if (node.nodeName === 'P') {
     firstWords.push(node.firstChild.data.trim().split(' ')[0]);
   }
-})
+});
 
 console.log(firstWords);
 
 // 3. Add class `stanza` to each paragraph except the first.
 let paragraphCount = 0;
-walk(document, node => {
+walk(document, (node) => {
   if (node.nodeName === 'P') {
     paragraphCount += 1;
     if (paragraphCount > 1) {
       node.classList.add('stanza');
     }
   }
-})
+});
