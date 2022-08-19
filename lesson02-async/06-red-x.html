@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .x {
+      position: absolute;
+      transform: rotate(45deg);
+      top: 20px;
+      left: 20px;
+    }
+
+    .x .horizontal {
+      width: 45px;
+      height: 5px;
+      position: absolute;
+      left: -20px;
+      background: red;
+    }
+
+    .x .vertical {
+      height: 45px;
+      width: 5px;
+      background: red;
+      position: absolute;
+      left: 0px;
+      top: -20px;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', event => {
+      // document.addEventListener('click', event => {
+      //   console.log(event.clientX, event.clientY);
+      //   let x = document.querySelector('.x');
+      //   x.style.top = `${event.clientY}px`;
+      //   x.style.left = `${event.clientX}px`;
+      // });
+      document.addEventListener('mousemove', event => {
+        console.log(event.clientX, event.clientY);
+        let x = document.querySelector('.x');
+        x.style.top = `${event.clientY}px`;
+        x.style.left = `${event.clientX}px`;
+      });
+      document.addEventListener('keyup', event => {
+        let keyPressed = event.key
+        console.log(keyPressed);
+
+        function changeXColor(color) {
+          let x = document.querySelector('.x');
+          [...x.children].forEach(div => div.style.background = color);
+        }
+        
+        switch(event.key) {
+          case 'b':
+            changeXColor('blue');
+            break;
+          case 'g':
+            changeXColor('green');
+            break;
+          case 'r':
+            changeXColor('red');
+            break;
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="x">
+    <div class="horizontal"></div>
+    <div class="vertical"></div>
+  </div> 
+</body>
+</html>

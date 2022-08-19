@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #elem1 {
+        background-color: green;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      #elem2 {
+        background-color: blue;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 150px;
+        height: 150px;
+      }
+
+      #elem3 {
+        background-color: red;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 100px;
+        height: 100px;
+        line-height: 25px;
+      }
+
+      #elem4 {
+        background-color: yellow;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="elem1">
+      1
+      <div id="elem2">
+        2
+        <div id="elem3">
+          3
+          <div id="elem4">4</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Clicking elem1 triggers 1 listener
+      let elem1 = document.querySelector('#elem1');
+      // Passing `true` fires elem1's listener during the bubbling phase.
+      elem1.addEventListener('click', event => alert(`${event.target.id} ${event.currentTarget.id}`), true);
+
+      // Clicking elem2 triggers 2 listeners
+      // Clicking elem3 triggers 2 listeners
+      // let elem2 = document.querySelector('#elem2');
+      // elem2.addEventListener('click', event => alert(`${event.target.id} ${event.currentTarget.id}`));
+
+      // Clicking elem4 triggers 3 listeners in this order: elem4, elem2, elem1
+      let elem4 = document.querySelector('#elem4');
+      elem4.addEventListener('click', event => alert(`${event.target.id} ${event.currentTarget.id}`));
+    </script>
+  </body>
+</html>

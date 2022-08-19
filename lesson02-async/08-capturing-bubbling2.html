@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .d1 {
+        background-color: green;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .d2 {
+        background-color: blue;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 150px;
+        height: 150px;
+      }
+
+      .d3 {
+        background-color: red;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 100px;
+        height: 100px;
+        line-height: 25px;
+      }
+
+      .d4 {
+        background-color: yellow;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d1 pick">
+      1
+      <main class="d2 pick">
+        2
+        <div class="d3">
+          3<section class="d4 pick">4</section>
+        </div>
+      </main>
+    </div>
+    <script>
+      let divs = document.querySelectorAll('.pick');
+
+      for (let index = 0; index < divs.length; index += 1) {
+        divs[index].addEventListener('click', highlightThis, true);
+      }
+
+      function highlightThis(e) {
+        alert(`${this.className} ${e.currentTarget.tagName}`);
+      }
+
+      // If we add the following line of code, what will happen?
+      document.querySelector('.d3').addEventListener('click', highlightThis, false);
+    </script>
+  </body>
+</html>
+
+<!-- Problem 2
+d1, d2, d4 have event listeners.
+`this` and currentTarget reference the calling object the listener is attached to.
+
+When we click on "4":
+- Capturing Phase
+  - Dispatch event from window down to to d4.
+    Since we pass `true` to `useCapture`:
+  - Fire d1's listener: Alert "d1 pick DIV"
+  - Fire d2's listener: Alert "d2 pick MAIN"
+- Target phase
+  - Fire d4's listener: Alert "d4 pick SECTION"
+- Bubbling Phase
+  - No more firing. 
+
+When we add a listener to d3, it's configure to fire in the bubbling phase.
+Alerts:
+d1 pick DIV
+d2 pick MAIN
+d4 pick SECTION
+d3 pick DIV
+-->

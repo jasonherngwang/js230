@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #elem0 {
+        width: 250px;
+        height: 250px;
+        position: absolute;
+        background-color: orange;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      #elem1 {
+        background-color: green;
+        position: relative;
+        top: 25px;
+        left: 25px;
+        width: 200px;
+        height: 200px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      #elem2 {
+        background-color: blue;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 150px;
+        height: 150px;
+      }
+
+      #elem3 {
+        background-color: red;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 100px;
+        height: 100px;
+        line-height: 25px;
+      }
+
+      #elem4 {
+        background-color: yellow;
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="elem0">0</div>
+    <div id="elem1">
+      1
+      <div id="elem2">
+        2
+        <div id="elem3">
+          3
+          <div id="elem4">4</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let elem0 = document.querySelector('#elem0');
+      let elem1 = document.querySelector('#elem1');
+      let elem4 = document.querySelector('#elem4');
+
+      elem0.addEventListener('click', (event) => alert(event.currentTarget.id));
+      elem1.addEventListener(
+        'click',
+        (event) => alert(event.currentTarget.id),
+        true
+      );
+      elem4.addEventListener('click', (event) => alert(event.currentTarget.id));
+    </script>
+  </body>
+</html>
+
+<!-- Problem 3
+How many alert boxes do you think will fire when the yellow box is clicked? Why?
+1 alert box
+elem0 is not part of the nesting structure. During Capture, we stop traversal
+at elem0.
+
+Even though elem1 through elem4 visually appear nested within elem0, what
+matters is the DOM element nesting.
+-->
