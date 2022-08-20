@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<script>
+  'use strict';
+
+  // Callback Style Async Programming
+  // Pass a callback to be executed after the async operation completes.
+
+  function loadScript(src, callback) {
+    let script = document.createElement('script');
+    script.src = src;
+
+    // When script finishes loading, onload is triggered, invoking the callback.
+    script.onload = () => callback(script);
+    
+    // At this point, `src` is still just a string.
+    // Appending a script to the DOM causes the browser to asynchronously
+    // request the .js file from the server (Cloudflare CDN in this case).
+    document.head.append(script);
+  }
+
+  // Initiate the async script load.
+  loadScript(
+    'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.2.0/lodash.js',
+    (script) => {
+      // In here, we put actions to be performed AFTER script has loaded.
+      alert(`Cool, the script ${script.src} is loaded`);
+
+      // Script has completed loading, so this works.
+      console.log(_.chunk(['a', 'b', 'c', 'd'], 2));
+    }
+  );
+
+  // This doesn't wait for the lodash load to complete, so _ is undefined here.
+  // console.log(_.chunk(['a', 'b', 'c', 'd'], 2));
+</script>

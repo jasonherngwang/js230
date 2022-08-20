@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<script>
+  let userNames = ['jasonherngwang', 'Ethanweiner20', 'RDeJonghe'];
+
+  // map every url to the promise of the fetch
+  let requests = userNames.map((userName) =>
+    fetch(`https://api.github.com/users/${userName}`)
+  );
+
+  // Promise.all takes an iterable and returns a new promise
+  // New promise resolves when ALL promises are resolved (all jobs finished)
+  // Resolves to an array of results, in the same order as the input array,
+  // regardless of time taken.
+  Promise.all(requests)
+    .then((responses) => {
+      responses.forEach((response) => {
+        console.log(`${response.url}: ${response.status}`);
+      });
+      // Pass data to next `then`, by resolving to the input data.
+      return responses;
+    })
+    .then((responses) =>
+      Promise.all(responses.map((response) => response.json()))
+    )
+    .then((users) => users.forEach((user) => console.log(user.name)));
+</script>

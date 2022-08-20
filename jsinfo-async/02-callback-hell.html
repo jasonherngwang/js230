@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<script>
+  'use strict';
+
+  // Load multiple scripts, one after another.
+  // Perform async operations sequentially, by nesting callbacks.
+
+  function loadScript(src, callback) {
+    let script = document.createElement('script');
+    script.src = src;
+
+    // Error-first callback style
+    script.onload = () => callback(null, script);
+    script.onerror = () => callback(new Error(`Script load error for ${src}`));
+
+    document.head.append(script);
+  }
+
+  const lodash =
+    'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.2.0/lodash.js';
+  const underscore =
+    'https://cdn.jsdelivr.net/npm/underscore@1.13.4/underscore-umd-min.js';
+  const jquery = 'https://code.jquery.com/jquery-3.6.0.min.js';
+  const moment =
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js';
+
+  // Pyramid of Doom (Callback Hell)
+  // Level 1
+  loadScript(lodash, (error, script) => {
+    if (error) {
+      console.log(`Failed to load ${script.src}`);
+    } else {
+      console.log(`Loaded ${script.src}`);
+
+      // Level 2
+      loadScript(underscore, (error, script) => {
+        if (error) {
+          console.log(`Failed to load ${script.src}`);
+        } else {
+          console.log(`Loaded ${script.src}`);
+
+          // Level 3
+          loadScript(jquery, (error, script) => {
+            if (error) {
+              console.log(`Failed to load ${script.src}`);
+            } else {
+              console.log(`Loaded ${script.src}`);
+
+              // Level 4
+              loadScript(moment, (error, script) => {
+                if (error) {
+                  console.log(`Failed to load ${script.src}`);
+                } else {
+                  console.log(`Loaded ${script.src}`);
+
+                  // Level 5: Use lodash
+                  console.log(_.chunk(['a', 'b', 'c', 'd'], 2))
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+</script>

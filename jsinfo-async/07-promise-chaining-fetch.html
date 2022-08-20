@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<script>
+  let url = 'https://jsonplaceholder.typicode.com/todos/1';
+
+  // then runs after fetch completes
+  // text() and json() return promises that take time to convert the response
+  // to either a string or a JSON object.
+  fetch(url)
+    .then((response) => response.json())
+    .then((json) => console.log(json));
+  fetch(url)
+    .then((response) => response.text())
+    .then((text) => console.log(text));
+
+  let githubUrl = 'https://api.github.com/users/jasonherngwang';
+  // Request my GH profile data
+  // fetch(githubUrl)
+  //   // Load as JSON; json() returns a promise
+  //   .then((response) => response.json())
+  //   // Show avatar on web page
+  //   .then(
+  //     (user) =>
+  //       new Promise((resolve, reject) => {
+  //         console.log(user);
+  //         let img = document.createElement('img');
+  //         img.src = user.avatar_url;
+  //         img.className = 'promise-avatar-example';
+  //         document.body.append(img);
+
+  //         setTimeout(() => {
+  //           img.remove();
+  //           resolve(user); // Must resolve the promise and pass data on.
+  //         }, 1000);
+  //       })
+  //   )
+  //   .then((user) => console.log(`Finished showing ${user.name}`));
+
+  // The following code is not extendable. Doesn't return promise or thenable.
+  // .then(user => {
+  //   let img = document.createElement('img');
+  //   img.src = user.avatar_url;
+  //   img.className = "promise-avatar-example";
+  //   document.body.append(img);
+
+  //   setTimeout(() => img.remove(), 1000);
+  // });
+
+  function loadJson(url) {
+    return fetch(url).then((response) => response.json());
+  }
+
+  function loadGithubUser(username) {
+    return loadJson(`https://api.github.com/users/${username}`);
+  }
+
+  function showAvatar(githubUser) {
+    return new Promise((resolve, reject) => {
+      let img = document.createElement('img');
+      img.src = githubUser.avatar_url;
+      img.className = 'promise-avatar-example';
+      document.body.append(img);
+
+      setTimeout(() => {
+        img.remove();
+        resolve(githubUser);
+      }, 1000);
+    });
+  }
+
+  loadGithubUser('jasonherngwang')
+    .then(user => showAvatar(user))
+    .then((user) => console.log(`Finished showing ${user.name}`));
+</script>

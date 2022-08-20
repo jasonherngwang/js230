@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<script>
+  // Leave loadScript intact. Use another function to promisify it.
+  function loadScript(src, callback) {
+    let script = document.createElement('script');
+    script.src = src;
+
+    script.onload = () => callback(null, script);
+    script.onerror = () => callback(new Error(`Script load error for ${src}`));
+
+    document.head.append(script);
+  }
+
+  // Promisification
+  // Don't need to pass callback when we call loadScriptPromise.
+  // We define a callback that maps to resolve/reject. This allows us to defer
+  // the callback details until later, when we invoke `then`.
+  let loadScriptPromise = (src) => {
+    return new Promise((resolve, reject) => {
+      loadScript(src, (error, script) => {
+        if (error) reject(error);
+        else resolve(script);
+      });
+    });
+  };
+
+  // Helper function
+  function promisify(f) {
+    // Return a wrapper function that forwards all the passed args
+    // Use ...args because we won't always just have 1 arg like `src`.
+    return function(...args) {
+      return new Promise((resolve, reject) => {
+        // Custom callback for f
+        function callback(error, result) {
+          if (error) reject(error);
+          else resolve(result);
+        }
+        
+        // By default, `this` references `window`.
+        // In case we store the returned wrapper func as a method:
+        // myObj.myMethod = promisify(someFunc)
+        // Then `this` references the calling object.
+
+        // Append custom callback to arguments
+        // Call original func
+        console.log(this);
+        f.call(this, ...args, callback);
+      });
+    };
+  }
+
+  // Old way
+  // loadScript(
+  //   'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.2.0/lodash.js',
+  //   (error, script) => {
+  //     if (error) {
+  //       console.log(`Failed to load ${script.src}`);
+  //     } else {
+  //       console.log(`Loaded ${script.src}`);
+  //     }
+  //   }
+  // );
+
+  // With promisification
+  // Pass callbacks AFTER we have already received a promise object.
+  // loadScriptPromise(
+  //   'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.2.0/lodash.js'
+  // ).then(
+  //   (script) => console.log(`Loaded ${script.src}`),
+  //   (error) => console.log(`Failed to load ${script.src}`)
+  // );
+
+  const loadScriptPromise2 = promisify(loadScript);
+  loadScriptPromise2(
+    'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.2.0/lodash.js'
+  ).then(
+    (script) => console.log(`Loaded ${script.src}`),
+    (error) => console.log(`Failed to load ${script.src}`)
+  );
+</script>

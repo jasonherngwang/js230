@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<script>
+  'use strict';
+
+  // Promises
+  // No longer need to pass callbacks to be executed after script load or error.
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      let script = document.createElement('script');
+      script.src = src;
+
+      script.onload = () => resolve(script);
+      script.onerror = () => reject(new Error(`Script load error for ${src}`));
+
+      document.head.append(script);
+    });
+  }
+
+  const lodashSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.2.0/lodash.js';
+  const jquerySrc = 'https://code.jquery.com/jquery-3.6.0.min.js';
+  const momentSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js';
+
+  // Chaining async operations. Each waits for the previous to complete.
+  // Within each `then` handler, we return another promise created by loadScript
+  loadScript(lodashSrc)
+    .then((script) => loadScript(jquerySrc))
+    .then((script) => loadScript(momentSrc))
+    .then((script) => {
+      // Now we can use lodash, jquery, and moment
+      console.log(_.chunk(['a', 'b', 'c', 'd'], 2));
+      $('body').append('abc');
+      console.log(moment().toDate())
+    });
+</script>

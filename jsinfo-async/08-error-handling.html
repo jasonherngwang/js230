@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<script>
+  let githubUrl = 'https://api.github.com/users/jasonherngwang';
+  // fetch(githubUrl)
+  fetch('https://no-such-server.blabla')
+    .then((response) => response.json())
+    .then(
+      (user) =>
+        new Promise((resolve, reject) => {
+          console.log(user);
+          let img = document.createElement('img');
+          img.src = user.avatar_url;
+          img.className = 'promise-avatar-example';
+          document.body.append(img);
+
+          setTimeout(() => {
+            img.remove();
+            resolve(user); // Must resolve the promise and pass data on.
+          }, 1000);
+        })
+    )
+    .then((user) => console.log(`Finished showing ${user.name}`))
+    .catch(error => alert(error));
+</script>
