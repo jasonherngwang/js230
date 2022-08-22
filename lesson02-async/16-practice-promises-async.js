@@ -189,20 +189,33 @@
 
 // // 11
 // /*
-// testPromise is assigned to a function that returns a settled (resolved) promise
-// object with value of '1'.
+// - test1New() is called.
+// - Within test1New, testPromise() is called.
+// - Promise.resolve('1') is called, immediately returning a settled (resolved)
+//   promise object with value of '1'.
+// - then() is called on the returned promise. We pass as an argument a callback.
+//   then() is an async function; the callback we pass it is placed in the
+//   microtask queue, to be executed after any remaining synchronous operations.
+//   It doesn't matter if the promise it is called upon is pending or settled.
+// - We continue executing the next line of synchronous code, logging '2'.
+// - test1New returns undefined, since there is no explicit return.
 
-// test1New executes. `then` is async and places its logging task in the microtask
-// queue. console.log('2') is synchronous, so it executes first, logging '2'.
+// - We execute the new synchronous code, test2New()
+// - test2New has the async keyword before it, so it immediately returns a promise.
+//   In this case it is a pending promise.
+//   - The code inside the body of test2New is placed in the microtask queue.
 
-// test2New executes. `await testPromise()` pauses function execution until the
-// promise returned by testPromise is resolved.
+// - Since there is no more synchronous code, we take tasks from the microtask
+//   queue.
+//   - The first task is the callback on the first line of test1New. It logs '1'.
+//   - Next, we execute the body of test2New.
+//     - We call testPromise(), which returns a resolved promise.
+//     - The keyword await tells JS to pause execution of test2New until the
+//       promise returned by testPromise() is settled.
+//     - The promise resolves to '1', which is logged.
+//     - The next synchronous code executes, logging '2'.
+// - There are no more synchronous tasks, microtasks, or macrotasks.
 
-// There is no more synchronous code after the invocation of test2New, so so we
-// pull the queued task from the microtask queue, logging '1'.
-
-// In test2New, the promise returned by testPromise resolves, and '1' is logged.
-// Synchronous function call `console.log('2')` logs '2'.
 // */
 // const testPromise = () => Promise.resolve('1');
 
@@ -240,20 +253,20 @@
 //   }
 // })();
 
-// 13
-/* 
-`await test13` throws an error with message 'A'.
-catch block logs 'E'
-finally block logs 'B'
-*/
-const test13 = Promise.reject('A');
+// // 13
+// /* 
+// `await test13` throws an error with message 'A'.
+// catch block logs 'E'
+// finally block logs 'B'
+// */
+// const test13 = Promise.reject('A');
 
-(async () => {
-  try {
-    console.log(await test13);
-  } catch {
-    console.log('E');
-  } finally {
-    console.log('B');
-  }
-})();
+// (async () => {
+//   try {
+//     console.log(await test13);
+//   } catch {
+//     console.log('E');
+//   } finally {
+//     console.log('B');
+//   }
+// })();
