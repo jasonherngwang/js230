@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      main,
+      #sub {
+        padding: 15px;
+      }
+      main {
+        width: 100%;
+        height: 200px;
+        background: blue;
+        color: white;
+      }
+
+      #sub {
+        position: relative;
+        top: 100px;
+        left: 15px;
+        background: red;
+        height: 50px;
+        width: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      Main Area
+      <section id="sub">Sub Area</section>
+    </main>
+    <script>
+      const main = document.querySelector('main');
+      const sub = document.querySelector('#sub');
+
+      main.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+        if (!sub.contains(event.target)) {
+          alert('main');
+        }
+      });
+      sub.addEventListener('contextmenu', (event) => {
+        event.preventDefault();
+        alert('sub');
+      });
+    </script>
+  </body>
+</html>

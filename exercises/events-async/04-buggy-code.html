@@ -1,0 +1,48 @@
+<!-- 
+When we click on the image:
+- Fires a click event
+- Capturing Phase
+  - Listener found on img
+- Bubbling Phase:
+  - Listener found on img. Fires listener.
+    - event.stopPropagation ends Bubbling Phase. This is useless.
+- Default behavior of an anchor tag is to redirect to the href.
+  - The bug is the use of stopPropagation instead of preventDefault.
+  - Default behavior occurs after the Capturing and Bubbling phases. The 
+    developer may be confusing Event Handling with default behavior.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      img {
+        display: block;
+        width: 15%;
+        margin-top: 10px;
+        cursor: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="https://www.launchschool.com">
+      Home
+      <img
+        src="https://d24f1whwu8r3u4.cloudfront.net/assets/launch-logo-b6d01bd15ee9da31457ee3c315845718823aa8a741858be598ab35042a312348.svg"
+      />
+    </a>
+    <script>
+      document.querySelector('img').addEventListener(
+        'click',
+        (event) => {
+          // event.stopPropagation();
+          event.preventDefault();
+        },
+        false
+      );
+    </script>
+  </body>
+</html>

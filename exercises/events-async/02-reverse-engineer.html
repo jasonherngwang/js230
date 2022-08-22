@@ -1,0 +1,66 @@
+<!--
+Remove the call to event.stopPropagation and refactor the result.
+
+If we click anywhere on the page, hide the element with class "container".
+
+document.querySelector('html').addEventListener('click', () => {
+  document.querySelector('#container').style = 'display: none';
+});
+
+document.querySelector('#container').addEventListener('click', (event) => {
+  event.stopPropagation();
+});
+
+Current behavior: 
+Clicking outside the container hides it.
+- "click" event fires.
+- Capturing phase
+  - Travel from window to html.
+  - Listener found on html.
+- Bubbling phase
+  - Listener found on html. Fire it, hiding #container.
+  - Travel up to window. End execution.
+  
+Clicking inside the container does nothing.
+- "click" event fires.
+- Capturing phase
+  - Travel from window to html.
+  - Listener found on html.
+  - Listener found on #container.
+- Bubbling phase
+  - Listener found on #container. Fire it, invoking stopPropagation.
+  - Bubbling phase is stopped.
+
+If we remove stopPropagation, we need to:
+- Before hiding the element, check if we clicked on any element nested inside
+  the container.
+  - If so, don't do anything.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #container {
+        width: 100px;
+        height: 100px;
+        background: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+      document.querySelector('html').addEventListener('click', (event) => {
+        const container = document.querySelector('#container');
+
+        if (!container.contains(event.target)) {
+          container.style = 'display: none';
+        }
+      });
+    </script>
+  </body>
+</html>
