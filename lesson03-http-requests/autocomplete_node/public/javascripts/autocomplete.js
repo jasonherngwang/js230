@@ -35,5 +35,6 @@ const Autocomplete = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  // `this` references the element to listener is attached to: `document`
   Autocomplete.init();
 });
