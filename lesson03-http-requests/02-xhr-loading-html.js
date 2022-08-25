@@ -2,50 +2,59 @@ document.addEventListener('DOMContentLoaded', () => {
   const ENDPOINT = 'https://ls-230-web-store-demo.herokuapp.com';
 
   const store = document.getElementById('store');
-  
+
   // Initial page load (one-time event)
   let request = new XMLHttpRequest();
   request.open('GET', 'https://ls-230-web-store-demo.herokuapp.com/products');
-  
-  request.addEventListener('load', event => {
+
+  request.addEventListener('load', (event) => {
     store.innerHTML = request.response;
   });
-  
+
   request.send();
-  
+
   // If we click any anchor tag, the contents of the `store` div with the
   // returned response body (HTML in this case).
-  store.addEventListener('click', event => {
+  store.addEventListener('click', (event) => {
     let target = event.target;
     if (target.tagName !== 'A') return;
-    
-    event.preventDefault()
-    
+
+    event.preventDefault();
+
     let request = new XMLHttpRequest();
-    request.open('GET', 'https://ls-230-web-store-demo.herokuapp.com' + target.getAttribute('href'));
-    
-    request.addEventListener('load', event => store.innerHTML = request.response);
+    request.open(
+      'GET',
+      'https://ls-230-web-store-demo.herokuapp.com' +
+        target.getAttribute('href')
+    );
+
+    request.addEventListener(
+      'load',
+      (event) => (store.innerHTML = request.response)
+    );
     request.send();
   });
-  
-  
-  
-  store.addEventListener('submit', event => {
+
+  store.addEventListener('submit', (event) => {
     event.preventDefault();
-  
+
     let form = event.target;
     let data = new FormData(form);
-    
+
     let request = new XMLHttpRequest();
-    
+
     request.open('POST', ENDPOINT + form.getAttribute('action'));
+    // Don't do this! Simple strings are insecure.
     request.setRequestHeader('Authorization', 'token AUTH_TOKEN');
-    
-    request.addEventListener('load', event => store.innerHTML = request.response);
-    
+
+    request.addEventListener(
+      'load',
+      (event) => (store.innerHTML = request.response)
+    );
+
     request.send(data);
-  })
-})
+  });
+});
 
 /*
 When we submit the form, we make a POST request to:
