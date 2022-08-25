@@ -16,6 +16,7 @@ const Autocomplete = {
     // Create new property listUI
     this.listUI = listUI;
 
+    // Add div to wrapper (now a sibling of input)
     // Grey text inside input, indicating first choice.
     let overlay = document.createElement('div');
     overlay.classList.add('autocomplete-overlay');
@@ -24,13 +25,73 @@ const Autocomplete = {
     this.input.parentNode.appendChild(overlay);
     this.overlay = overlay;
   },
+  
+  // Perform async XHR request every time we type something.
+  fetchMatches(query, callback) {
+    let request = new XMLHttpRequest();
+    
+    request.addEventListener('load', () => {
+      callback(request.response);
+    })
+    
+    request.open('GET', `${this.url}${encodeURIComponent(query)}`);
+    request.responseType = 'json';
+    request.send();
+  },
+  
+  bindEvents() {
+    // Fires when we type in the box.
+    // `bind` returns new function that calls valueChanged with explicit
+    // function execution context of the input element.
+    this.input.addEventListener('input', this.valueChanged.bind(this));
+  },
+  
+  
+  valueChanged() {
+    let value = this.input.value;
+    
+    if (value.length > 0) {
+      this.fetchMatches(value, matches => {
+        // `visible` here is not an HTML attribute.
+        // It's only used to show/hide the overlay.
+        this.visible = true;
+        this.matches = matches;
+        console.log(matches);
+        this.draw();
+      });
+    } else {
+      this.reset();
+    }
+  },
+  
+  draw() {
+    
+    while (this.listUI.lastChild) {
+      this.listUI.removeChild(this.listUI.lastChild);
+    }
+    
+    if (!this.visible) {
+      this.overlay.textContent = '';
+      return;
+    }
+    
+    
+  },
 
   init() {
     this.input = document.querySelector('input');
     this.url = '/countries?matching=';
-
+    
+    // Set initial state
+    this.listUI = null;
+    this.overlay = null;
+    
+    this.visible = false;
+    this.matches = [];
+    
     this.wrapInput();
     this.createUI();
+    this.bindEvents();
   },
 };
 
