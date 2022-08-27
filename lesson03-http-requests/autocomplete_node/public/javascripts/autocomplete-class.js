@@ -1,14 +1,33 @@
 import debounce from './debounce.js';
 
-// State is stored in the Autocomplete object, referenced using `this`.
-const Autocomplete = {
-  // Make wrapper a sibling of input, then move input inside wrapper.
+class Autocomplete {
+  constructor(input, url) {
+    this.input = input;
+    this.url = url;
+
+    this.listUI = null;
+    this.overlay = null;
+
+    this.visible = false;
+    this.matches = [];
+    this.selectedIndex = null;
+    this.bestMatchIndex = null;
+
+    this.wrapInput();
+    this.createUI();
+
+    this.valueChanged = debounce(this.valueChanged.bind(this), 300);
+
+    this.bindEvents();
+    this.reset();
+  }
+
   wrapInput() {
     let wrapper = document.createElement('div');
     wrapper.classList.add('autocomplete-wrapper');
     this.input.parentNode.appendChild(wrapper);
     wrapper.appendChild(this.input);
-  },
+  }
 
   createUI() {
     // Unordered list of country names, in drop-down menu
@@ -27,7 +46,7 @@ const Autocomplete = {
 
     this.input.parentNode.appendChild(overlay);
     this.overlay = overlay;
-  },
+  }
 
   // Perform async XHR request every time we type something.
   fetchMatches(query, callback) {
@@ -40,18 +59,20 @@ const Autocomplete = {
     request.open('GET', `${this.url}${encodeURIComponent(query)}`);
     request.responseType = 'json';
     request.send();
-  },
+  }
 
   bindEvents() {
     // `bind` returns new function that calls the method with explicit
     // function execution context of the input element.
     this.input.addEventListener('input', this.valueChanged);
-    this.input.addEventListener('keydown', this.handleKeydown.bind(this));
+    // this.input.addEventListener('keydown', this.handleKeydown.bind(this));
+    this.input.addEventListener('keydown', this.handleKeydown);
     this.listUI.addEventListener('click', this.handleMousedown.bind(this));
-  },
+  }
 
   handleKeydown(event) {
     console.log(event.key);
+    console.log(event.currentTarget);
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
@@ -101,7 +122,7 @@ const Autocomplete = {
         this.reset();
         break;
     }
-  },
+  }
 
   handleMousedown(event) {
     let element = event.target;
@@ -109,7 +130,7 @@ const Autocomplete = {
       this.input.value = element.textContent;
       this.reset();
     }
-  },
+  }
 
   valueChanged() {
     let value = this.input.value;
@@ -128,7 +149,7 @@ const Autocomplete = {
     } else {
       this.reset();
     }
-  },
+  }
 
   // Renders new state of UI, after every action.
   draw() {
@@ -169,13 +190,13 @@ const Autocomplete = {
       li.textContent = match.name;
       this.listUI.appendChild(li);
     });
-  },
+  }
 
   generateOverlayContent(value, match) {
     // Splice user input and remainder of first match.
     let end = match.name.substr(value.length);
     return value + end;
-  },
+  }
 
   reset() {
     // Hide overlay
@@ -187,32 +208,11 @@ const Autocomplete = {
 
     // Clean up. Otherwise results from the first letter will persist.
     this.draw();
-  },
-
-  // Initialize state
-  init() {
-    this.input = document.querySelector('input');
-    this.url = '/countries?matching=';
-
-    // Set initial state
-    this.listUI = null;
-    this.overlay = null;
-
-    this.visible = false;
-    this.matches = [];
-    this.selectedIndex = null;
-    this.bestMatchIndex = null;
-
-    this.wrapInput();
-    this.createUI();
-
-    this.valueChanged = debounce(this.valueChanged.bind(this), 300);
-
-    this.bindEvents();
-    this.reset();
-  },
-};
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-  Autocomplete.init();
+  const input = document.querySelector('input');
+  const url = '/countries?matching=';
+  const autocomplete = new Autocomplete(input, url);
 });
