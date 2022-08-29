@@ -1,0 +1,84 @@
+<!-- Audry's solution -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Cancel</title>
+  <style media="screen">
+    body {
+      font-family: Arial;
+      font-size: 16px;
+    }
+
+    form {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .student_fields {
+      background-color: #d9d9d9;
+    }
+
+    fieldset {
+      margin: 15px;
+      border-color: #c1c5c8;
+      border-radius: 5px;
+      text-align: left;
+    }
+
+    label {
+      font-weight: bold;
+      padding: 10px;
+    }
+
+    input[type="submit"] {
+      color: #fff;
+      background: #7283f0;
+      border-color: #7283f0;
+      border-radius: 5px;
+      box-sizing: border-box;
+      width: 25%;
+      height: 20px;
+    }
+
+    .student_form>input {
+      background: #1fe924;
+      border-color: #1fe924;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Cancel a schedule or booking</h1>
+  <div class="section schedules">
+    <form class="schedule" action="/api/schedules/">
+      <fieldset>
+        <legend>Cancel Schedule</legend>
+        <p>
+          <label for="schedule_id">Select a schedule: </label>
+          <select name="schedule_id" id="schedule">
+        </p>
+        <input type="submit" name="submit" value="Submit">
+      </fieldset>
+
+    </form>
+  </div>
+  <div class="section bookings">
+    <form class="booking" action="/api/bookings/">
+      <fieldset>
+        <legend>Cancel Booking</legend>
+        <p>
+          <label for="booking">Select a booking:</label>
+          <select id="booking" name="booking_id">
+        </p>
+
+        <input type="submit" name="submit" value="Submit">
+      </fieldset>
+    </form>
+
+  </div>
+</body>
+<script src="javascripts/cancellations02.js" charset="utf-8"></script>
+
+</html>

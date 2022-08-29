@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Data Attributes</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(() => {
+        // Select by custom data attribute
+        let $a = $('a[data-block=gold]');
+        console.log($a.attr('data-block')); // gold
+        // Use .data() as getter.
+        console.log($a.data('block')); // gold
+
+        // .data() as setter. Stores data in separate data store, not as an 
+        // HTML attribute.
+        $a.data('block', 'silver');
+        console.log($a.attr('data-block')); // gold
+        console.log($a.data('block')); // silver
+        
+        $a.attr('data-block', 'red');
+        console.log($a.attr('data-block')); // red
+        console.log($a.data('block')); // silver
+      });
+    </script>
+  </head>
+  <body>
+    <ul>
+      <li><a href="#" data-block="gold">Gold Sponsors</a></li>
+      <li><a href="#" data-block="silver">Silver Sponsors</a></li>
+      <li><a href="#" data-block="bronze">Bronze Sponsors</a></li>
+    </ul>
+
+    <article data-block="gold">
+      <h1>Gold Sponsors</h1>
+    </article>
+
+    <article data-block="silver">
+      <h1>Silver Sponsors</h1>
+    </article>
+
+    <article data-block="bronze">
+      <h1>Bronze Sponsors</h1>
+    </article>
+  </body>
+</html>

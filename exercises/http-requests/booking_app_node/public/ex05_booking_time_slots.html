@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Time Slot</title>
+  <style>
+    fieldset {
+      border: none;
+    }
+    legend {
+      font-size: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="schedules">
+    <form id="add_schedule" method="post" action="/api/schedules">
+      <fieldset>
+        <legend>Schedules</legend>
+        <label for="id">Please select one schedule: </label>
+        <select id="id" name="id"></select>
+        <br>
+        <label for="student_email">Email: </label>
+        <input type="text" id="student_email" name="student_email"></input>
+        <input type="submit" value="Submit">
+      </fieldset>
+    </form>
+  </div>
+  <div id="student_details" hidden>
+    <form id="add_student" method="post" action="/api/students">
+      <fieldset>
+        <legend>Please provide new student details</legend>
+        <label for="email">Email: </label>
+        <input type="text" id="email" name="email"></input>
+        <br>
+        <label for="name">Name: </label>
+        <input type="text" id="name" name="name"></input>
+        <br>
+        <label for="booking_sequence">Booking Sequence: </label>
+        <input type="text" id="booking_sequence" name="booking_sequence"></input>
+        <br>
+        <input type="submit" value="Submit">
+      </fieldset>
+    </form>
+  </div>
+  <script src="javascripts/booking-time-slots.js"></script>
+</body>
+</html>
