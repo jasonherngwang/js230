@@ -1,4 +1,4 @@
-// async
+// `async` function without asynchronous code inside.
 // Returns value 1 wrapped in a resolved promise.
 async function f() {
   return 1;

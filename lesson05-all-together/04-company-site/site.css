@@ -5,6 +5,7 @@ body {
   text-align: center;
   color: #45494d;
   background: #2f2840 url("images/bg_body.gif") 50% 0 repeat;
+  box-sizing: border-box;
 }
 
 a {
@@ -156,11 +157,55 @@ footer li a.instagram { background-position: 0 -138px; }
   margin: 0 0 20px 0;
 }
 
-#modal {
+.modal {
   position: absolute;
-  left: 50%;
-  width: 400px;
-  margin-left: -200px;
+  top: 20px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  padding: 128px 48px;
+  width: 100%;
+  max-width: 660px;
+  background: white;
+  z-index: 2;
+  display: none;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .5);
+  z-index: 1;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.modal-name {
+  display: inline-block;
+  font-size: 24px;
+  color: #3e59b2;
+}
+
+.modal-photo {
+  display: inline-block;
+  width: 100px;
+}
+
+.modal-profile {
+  text-align: justify;
+}
+
+.close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
 }
 
 @media (max-width: 875px) {
