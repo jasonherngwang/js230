@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    <section id="section-one">
+      <h1>Section Heading</h1>
+      <article id="article-one">
+        <h2>Article 1 Heading</h2>
+        <p>Paragraph Text</p>
+      </article>
+      <article id="article-two">
+        <h2>Article 2 Heading</h2>
+        <p>Paragraph Text</p>
+      </article>
+    </div>
+  </main>
+  <footer>Some <em>random</em> text</footer>
+  <script>
+    const articles = document.getElementsByTagName('article');
+    const articlesStatic = document.querySelectorAll('article');
+    console.log(articles); // HTMLCollection(2)
+    console.log(articlesStatic); // HTMLCollection(2)
+
+    // Live collection auto-updates
+    const articleThree = document.createElement('article');
+    articleThree.setAttribute('id', 'article-three');
+    document.getElementById('article-two').insertAdjacentElement('afterend',articleThree);
+    console.log(articles); // HTMLCollection(3)
+    console.log(articlesStatic); // HTMLCollection(2)
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Programming Languages</title>
+    <style>
+      #modal {
+        display: none;
+      }
+
+      #modal-bg {
+        z-index: 1;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      #modal-dialog {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        padding: 32px;
+        width: 80%;
+        max-width: 600px;
+        background: white;
+        z-index: 2;
+      }
+    </style>
+    <script src="deleteConfirmation.js"></script>
+  </head>
+  <body>
+    <h1>Todo List</h1>
+    <ul id="todo_list"></ul>
+    <div id="modal">
+      <div id="modal-bg"></div>
+      <div id="modal-dialog">
+        <p>Are you sure?</p>
+        <a href="#" class="yes">Yes</a>
+        <a href="#" class="no">No</a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div>
+      <h1>Heading Element</h1>
+      Text Node
+      <p>Paragraph Element</p>
+      Another Text Node
+    </div>
+  </body>
+  <script>
+    const div = document.querySelector('div');
+    const divNodeChildren = div.childNodes;
+    const divElementChildren = div.children;
+    const element1 = div.querySelector('h1');
+    const element2 = div.querySelector('p');
+
+    // Children
+    console.log(divNodeChildren); // NodeList(5) [text, h1, text, p, text]
+    console.log(divElementChildren); // HTMLCollection(2) [h1, p]
+
+    // Parent
+    console.log(element1.parentNode); // div
+    console.log(element1.parentElement); // div
+
+    // First
+    console.log(div.firstChild); // #text (empty text node)
+    console.log(divNodeChildren[0]); // #text
+
+    console.log(div.firstElementChild); // h1
+    console.log(divElementChildren[0]); // h1
+
+    // Last
+    console.log(div.lastChild); // #text ("Another Text Node")
+    console.log(divNodeChildren[divNodeChildren.length - 1]); // #text
+
+    console.log(div.lastElementChild); // p
+    console.log(divElementChildren[divElementChildren.length - 1]); // p
+
+    // Siblings
+    console.log(element1.nextSibling); // #text ("Text Node")
+
+    console.log(element1.nextElementSibling); // p
+
+    console.log(element2.previousSibling); // #text ("Text Node")
+    
+    console.log(element2.previousElementSibling); // h1
+  </script>
+</html>

@@ -1,13 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const ENDPOINT = 'http://localhost:3000/';
+  const ENDPOINT = 'http://localhost:3000';
   let photos;
 
   // Elements
   const slides = document.querySelector('#slides');
   const header = document.querySelector('section > header');
   const comments = document.querySelector('#comments > ul');
-  // const likeButton = document.querySelector('a.like');
-  // const favoriteButton = document.querySelector('a.button.favorite');
+  const form = document.querySelector('form');
 
   // Handlebars templates
   const photoTemplate = Handlebars.compile(
@@ -43,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const displayComments = (id) => {
-    fetch(ENDPOINT + 'comments?photo_id=' + id)
+    fetch(ENDPOINT + '/comments?photo_id=' + id)
       .then((response) => response.json())
       .then((json) => {
         const commentsHtml = photoCommentsTemplate({ comments: json });
@@ -61,8 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
         this.currentSlide.previousElementSibling || this.lastSlide;
       this.fadeOut(this.currentSlide);
       this.fadeIn(followingSlide);
-      this.displayPhotoContent(followingSlide.getAttribute('data-id'));
+
+      const id = followingSlide.getAttribute('data-id');
+      this.displayPhotoContent(id);
       this.currentSlide = followingSlide;
+
+      this.updateForm(id);
     },
 
     nextSlide(e) {
@@ -91,6 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
       displayComments(id);
     },
 
+    updateForm(id) {
+      form.querySelector('[name=photo_id]').value = id;
+    },
+
     bind() {
       this.prev = this.slideshow.querySelector('.prev');
       this.next = this.slideshow.querySelector('.next');
@@ -109,27 +116,59 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const bindButtons = () => {
-    const likeButton = document.querySelector('a.like');
+    header.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        e.preventDefault();
 
-    likeButton.addEventListener('click', async (e) => {
+        const button = e.target;
+        const path = button.getAttribute('href');
+        const id = button.getAttribute('data-id');
+        const textContent = button.textContent;
+
+        fetch(ENDPOINT + path, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: JSON.stringify({ photo_id: Number(id) }),
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            button.textContent = button.textContent.replace(/\d+/, json.total);
+          });
+      }
+    });
+  };
+
+  const bindForm = () => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const response = await fetch(ENDPOINT + `photos/like`, {
+      const path = form.getAttribute('action');
+      const name = document.querySelector('#name').value;
+      const email = document.querySelector('#email').value;
+      const comment = document.querySelector('#body').value;
+      const photo_id = Number(form.querySelector('[name=photo_id]').value);
+
+      fetch(ENDPOINT + path, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: JSON.stringify({
-          photo_id: Number(e.currentTarget.getAttribute('data-id')),
-        }),
-      }).then((response) => response.json());
-
-      likeButton.textContent = `♡ ${response.total} Likes`;
+        body: JSON.stringify({ name, email, body: comment, photo_id }),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          json.src = json.gravatar;
+          const commentsHtml = Handlebars.compile('{{> photo_comment}}')(json);
+          comments.insertAdjacentHTML('beforeend', commentsHtml);
+          form.reset();
+        });
     });
   };
 
   // Execution
-  fetch(ENDPOINT + 'photos')
+  fetch(ENDPOINT + '/photos')
     .then((response) => response.json())
     .then((json) => addHttpsSrc(json))
     .then((json) => {
@@ -139,5 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
       displayComments(photos[0].id);
       slideshow.init();
       bindButtons();
+      bindForm();
     });
 });
