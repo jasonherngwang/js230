@@ -19,6 +19,22 @@ function isInvalidSwap(node1, node2) {
   return !node1 || !node2 || node1.contains(node2) || node2.contains(node1);
 }
 
+// Alternative solution; maintains event listeners
+function swap(f, s) {
+  const first = document.getElementById(f);
+  const second = document.getElementById(s);
+
+  const firstClone = first.cloneNode(true);
+  const secondClone = second.cloneNode(true);
+
+  first.after(firstClone);
+  second.after(secondClone);
+  secondClone.replaceWith(first);
+  firstClone.replaceWith(second);
+  firstClone.remove();
+  secondClone.remove();
+}
+
 // Add event listeners
 const node1 = document.querySelector('#' + CSS.escape(1));
 const node2 = document.querySelector('#' + CSS.escape(2));

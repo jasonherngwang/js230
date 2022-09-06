@@ -25,14 +25,14 @@
     const articles = document.getElementsByTagName('article');
     const articlesStatic = document.querySelectorAll('article');
     console.log(articles); // HTMLCollection(2)
-    console.log(articlesStatic); // HTMLCollection(2)
+    console.log(articlesStatic); // NodeList(2)
 
     // Live collection auto-updates
     const articleThree = document.createElement('article');
     articleThree.setAttribute('id', 'article-three');
     document.getElementById('article-two').insertAdjacentElement('afterend',articleThree);
     console.log(articles); // HTMLCollection(3)
-    console.log(articlesStatic); // HTMLCollection(2)
+    console.log(articlesStatic); // NodeList(2)
   </script>
 </body>
 </html>

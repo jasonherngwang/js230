@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let guesses;
 
   function generateRandomNum(min, max) {
-    return Math.floor(Math.random() * max) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 
   function newGame() {
     form.reset();
-    answer = generateRandomNum(1, 2);
+    answer = generateRandomNum(1, 100);
     guesses = 0;
     button.disabled = false;
     gameMessage.textContent = 'Guess a number from 1 to 100.';
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   form.addEventListener('submit', (event) => {
-    event.preventDefault;
+    event.preventDefault();
 
     let guess = inputGuess.value;
     let message;

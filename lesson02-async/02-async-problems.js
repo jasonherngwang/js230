@@ -55,10 +55,10 @@ function delayLog() {
 // }, 20);
 
 // setTimeout(() => {
-//   f(); // 1
+//   f(); // 2
 // });
 
-// g(); // 2
+// g(); // 1
 
 // Problem 4
 

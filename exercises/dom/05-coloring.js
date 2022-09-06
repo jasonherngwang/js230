@@ -42,3 +42,28 @@ function colorRecursive(gen, currentGen = 0, parent = document.body) {
 colorRecursive(0);
 colorRecursive(4);
 colorRecursive(5);
+
+// Gather nodes by level
+function nodesUpToLevel(level) {
+  let nodes = [[document.body]];
+  let nodesAtCurrentLevel = [document.body];
+  let currentGen = 0;
+
+  while (currentGen < level) {
+    nodesAtCurrentLevel = [
+      ...nodesAtCurrentLevel.flatMap((node) => [...node.children]),
+    ];
+    nodes.push(nodesAtCurrentLevel);
+    currentGen += 1;
+  }
+  return nodes;
+}
+
+function colorGen(gen) {
+  const nodes = nodesUpToLevel(gen);
+  nodes[nodes.length - 1].forEach((node) =>
+    node.classList.toggle('generation-color')
+  );
+}
+
+colorGen(7);

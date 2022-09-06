@@ -17,7 +17,14 @@ let heading = body.childNodes[1]; // Skip empty text node
 heading.style.color = '#ff0000';
 heading.style.fontSize = '48px';
 
-// 2. Retrieve the first word from each paragraph, and log them
+// 2. Count the paragraphs on the page, and then log the result.
+let count = 0;
+walk(document, (node) => {
+  if (node.nodeName === 'P') count += 1;
+});
+console.log(count);
+
+// 3. Retrieve the first word from each paragraph, and log them
 let firstWords = [];
 
 // Starting from body
@@ -36,7 +43,7 @@ walk(document, (node) => {
 
 console.log(firstWords);
 
-// 3. Add class `stanza` to each paragraph except the first.
+// 4. Add class `stanza` to each paragraph except the first.
 let paragraphCount = 0;
 walk(document, (node) => {
   if (node.nodeName === 'P') {

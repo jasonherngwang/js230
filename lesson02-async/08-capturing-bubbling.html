@@ -59,7 +59,7 @@
     <script>
       // Clicking elem1 triggers 1 listener
       let elem1 = document.querySelector('#elem1');
-      // Passing `true` fires elem1's listener during the bubbling phase.
+      // Passing `true` fires elem1's listener during the capturing phase.
       elem1.addEventListener('click', event => alert(`${event.target.id} ${event.currentTarget.id}`), true);
 
       // Clicking elem2 triggers 2 listeners

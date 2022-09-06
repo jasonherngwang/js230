@@ -62,6 +62,22 @@ function breadthFirstWalk(node, callback) {
   }
 }
 
+// Gather nodes, level-by-level (Array of Arrays)
+function nodesUpToLevel(level) {
+  let nodes = [[document.body]];
+  let nodesAtCurrentLevel = [document.body];
+  let currentGen = 0;
+
+  while (currentGen < level) {
+    nodesAtCurrentLevel = [
+      ...nodesAtCurrentLevel.flatMap((node) => [...node.children]),
+    ];
+    nodes.push(nodesAtCurrentLevel);
+    currentGen += 1;
+  }
+  return nodes;
+}
+
 // Traverse ancestors, up to <html>
 function ascend(node, callback) {
   callback(node);

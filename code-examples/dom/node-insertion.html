@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- h1 gets removed -->
+    <h1>Heading</h1>
+    <!-- New h1 inserted here -->
+
+    <p id="hello">Hello</p>
+
+    <!-- before -->
+    <ol id="ol">
+      <!-- prepend -->
+      <li>0</li>
+      <li>1</li>
+      <li>2</li>
+      <!-- append -->
+    </ol>
+    <!-- after -->
+
+    <!-- Gets replaced with hello element -->
+    <p id="goodbye">Goodbye</p>
+  </body>
+</html>
+
+<script>
+  ol.before('before'); // insert string "before" before <ol>
+  ol.after('after'); // insert string "after" after <ol>
+
+  let liFirst = document.createElement('li');
+  liFirst.innerHTML = 'prepend';
+  ol.prepend(liFirst); // insert liFirst at the beginning of <ol>
+
+  let liLast = document.createElement('li');
+  liLast.innerHTML = 'append';
+  ol.append(liLast); // insert liLast at the end of <ol>
+
+  document.querySelector('h1').insertAdjacentHTML('afterend', '<h1>Another Heading</h1>')
+
+  document.querySelector('h1').remove();
+
+  document.querySelector('#goodbye').replaceWith(document.querySelector('#hello'));
+</script>

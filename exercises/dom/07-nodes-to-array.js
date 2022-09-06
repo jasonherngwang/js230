@@ -22,3 +22,9 @@ function nodesToArr(node = document.body) {
 }
 
 console.log(JSON.stringify(nodesToArr()));
+
+// Robert solution
+function nodesToArr2(node = document.body) {
+  const childElements = [...node.children].map(nodesToArr);
+  return [node.tagName, childElements];
+}

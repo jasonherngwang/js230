@@ -40,3 +40,33 @@ console.log(domTreeTracerBottomUp('5'));
 // [['HEADER', 'MAIN', 'FOOTER'], ['ARTICLE']]
 console.log(domTreeTracerBottomUp('22'));
 // [['A'], ['STRONG'], ['SPAN', 'SPAN'], ['P', 'P'], ['SECTION', 'SECTION'], ['HEADER', 'MAIN', 'FOOTER'], ['ARTICLE']]
+
+// Alternative solution
+function domTreeTracer(nodeId) {
+  let node = document.querySelector('#' + CSS.escape(nodeId));
+
+  if (nodeId === 1) return [[node.tagName]];
+
+  let parentNode = node.parentElement;
+  let nodesAtCurrentLevel = [...parentNode.children].map((n) => n.tagName);
+
+  return [nodesAtCurrentLevel].concat(domTreeTracer(Number(parentNode.id)));
+}
+console.log(JSON.stringify(domTreeTracer(22)));
+
+// Iterative solution
+function domTreeTracerIterative(id) {
+  let elem = document.getElementById(id);
+  let parent;
+  const domTree = [];
+
+  do {
+    parent = elem.parentElement;
+    domTree.push([...parent.children].map((n) => n.tagName));
+    elem = parent;
+  } while (parent.tagName !== 'BODY');
+
+  return domTree;
+}
+
+console.log(JSON.stringify(domTreeTracerIterative(22)));

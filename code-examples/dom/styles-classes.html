@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    <section id="section-one" class="apples oranges">
+      <h1>Section Heading</h1>
+      <article id="article-one">
+        <h2>Article 1 Heading</h2>
+        <p>Paragraph Text</p>
+      </article>
+      <article id="article-two">
+        <h2>Article 2 Heading</h2>
+        <p>Paragraph Text</p>
+      </article>
+    </div>
+  </main>
+  <script>
+    const section = document.querySelector('section');
+    console.log(section.className); // 'apples oranges'
+    console.log(section.classList); // DOMTokenList(2)
+    
+    section.classList.forEach(c => console.log(c));
+    // apples
+    // oranges
+
+    section.classList.toggle('apples');
+
+    document.querySelector('#article-two').style.display = 'none';
+    document.querySelector('h2').style.display = '';
+
+  </script>
+</body>
+</html>
