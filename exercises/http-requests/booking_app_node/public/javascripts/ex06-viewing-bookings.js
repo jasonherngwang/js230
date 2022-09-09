@@ -1,3 +1,4 @@
+// Querying for schedules
 document.addEventListener('DOMContentLoaded', () => {
   let schedules;
 
