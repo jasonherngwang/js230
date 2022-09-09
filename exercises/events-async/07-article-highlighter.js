@@ -1,12 +1,13 @@
 /*
 When we click something:
 Is it on an anchor tag?
-- Move highlight to article
-- Default action is to navigate to the article (do not preventDefault)
+- Identify the article id from the href.
+- Move highlight to article.
+- Default action is to navigate to the article (do not preventDefault).
 Is it on an article?
-- Move highlight to article
+- Move highlight to article.
 Else
-- Move highlight to main
+- Move highlight to main.
 
 Setup
 Event handlers on:
@@ -16,7 +17,7 @@ Event handlers on:
 
 Highlight function
 - 1 parameter: The new element to be highlighted
-- Keep track of last highlighted element.
+- Keep track of last highlighted element - closure?
 - Remove class from last highlighted element. Add to new one.
 */
 

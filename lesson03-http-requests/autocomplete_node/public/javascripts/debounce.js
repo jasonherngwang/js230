@@ -9,7 +9,7 @@ export default (func, delay) => {
   return (...args) => {
     if (timeout) {
       clearTimeout(timeout);
-      console.log('cleared');
+      console.log('Debounce filter: Cleared previous timeout operation');
     }
     timeout = setTimeout(() => func(...args), delay);
   };

@@ -25,58 +25,48 @@ class Autocomplete {
   wrapInput() {
     let wrapper = document.createElement('div');
     wrapper.classList.add('autocomplete-wrapper');
-    this.input.parentNode.appendChild(wrapper);
+    this.input.parentElement.append(wrapper);
     wrapper.appendChild(this.input);
   }
 
   createUI() {
-    // Unordered list of country names, in drop-down menu
     let listUI = document.createElement('ul');
     listUI.classList.add('autocomplete-ui');
-    // Add ul to wrapper (now a sibling of input)
-    this.input.parentNode.appendChild(listUI);
-    // Create new property listUI
+    this.input.parentElement.append(listUI);
     this.listUI = listUI;
 
-    // Add div to wrapper (now a sibling of input)
-    // Grey text inside input, indicating first choice.
     let overlay = document.createElement('div');
     overlay.classList.add('autocomplete-overlay');
     overlay.style.width = `${this.input.clientWidth}px`;
 
-    this.input.parentNode.appendChild(overlay);
+    this.input.parentElement.append(overlay);
     this.overlay = overlay;
   }
 
   // Perform async XHR request every time we type something.
   fetchMatches(query, callback) {
     let request = new XMLHttpRequest();
+    request.open('GET', `${this.url}${encodeURIComponent(query)}`);
+    request.responseType = 'json';
 
     request.addEventListener('load', () => {
       callback(request.response);
     });
 
-    request.open('GET', `${this.url}${encodeURIComponent(query)}`);
-    request.responseType = 'json';
     request.send();
   }
 
   bindEvents() {
-    // `bind` returns new function that calls the method with explicit
-    // function execution context of the input element.
     this.input.addEventListener('input', this.valueChanged);
-    // this.input.addEventListener('keydown', this.handleKeydown.bind(this));
-    this.input.addEventListener('keydown', this.handleKeydown);
+    this.input.addEventListener('keydown', this.handleKeydown.bind(this));
     this.listUI.addEventListener('click', this.handleMousedown.bind(this));
   }
 
   handleKeydown(event) {
     console.log(event.key);
-    console.log(event.currentTarget);
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        // Select 1st item, or wrap around from bottom to top.
         if (
           this.selectedIndex === null ||
           this.selectedIndex === this.matches.length - 1
@@ -85,35 +75,26 @@ class Autocomplete {
         } else {
           this.selectedIndex += 1;
         }
-        // If selecting from the list, clear overlay.
         this.bestMatchIndex = null;
         this.draw();
         break;
       case 'ArrowUp':
         event.preventDefault();
-        // Select last item, or wrap around from top to bottom.
         if (this.selectedIndex === null || this.selectedIndex === 0) {
           this.selectedIndex = this.matches.length - 1;
         } else {
           this.selectedIndex -= 1;
         }
-        // If selecting from the list, clear overlay.
         this.bestMatchIndex = null;
         this.draw();
         break;
-      // Tab only works when we are focused on the input, not when selecting a
-      // match. If no match, or we are in the list, Tab jumps to address bar.
       case 'Tab':
         if (this.bestMatchIndex !== null && this.matches.length !== 0) {
-          // Autocompletes input with best match.
           this.input.value = this.matches[this.bestMatchIndex].name;
           event.preventDefault();
         }
-        // Best match autofilled; clear drop-down list.
         this.reset();
         break;
-      // If we are in the list and don't want the options, Esc restores what we
-      // originally typed. Enter accepts the value.
       case 'Enter':
         this.reset();
         break;
@@ -138,8 +119,6 @@ class Autocomplete {
 
     if (value.length > 0) {
       this.fetchMatches(value, (matches) => {
-        // `visible` here is not an HTML attribute.
-        // It's only used to show/hide the overlay.
         this.visible = true;
         this.matches = matches;
         this.bestMatchIndex = 0;
@@ -151,20 +130,16 @@ class Autocomplete {
     }
   }
 
-  // Renders new state of UI, after every action.
   draw() {
-    // Remove all drop-down items until empty.
     while (this.listUI.lastChild) {
       this.listUI.removeChild(this.listUI.lastChild);
     }
 
-    // Show blank overlay (essentially invisible)
     if (!this.visible) {
       this.overlay.textContent = '';
       return;
     }
 
-    // Display first result as overlay text
     if (this.bestMatchIndex !== null && this.matches.length !== 0) {
       let selected = this.matches[this.bestMatchIndex];
       this.overlay.textContent = this.generateOverlayContent(
@@ -175,15 +150,12 @@ class Autocomplete {
       this.overlay.textContent = '';
     }
 
-    // Populate list
     this.matches.forEach((match, index) => {
       let li = document.createElement('li');
       li.classList.add('autocomplete-ui-choice');
 
       if (index === this.selectedIndex) {
-        // Style currently-selected item.
         li.classList.add('selected');
-        // Autocomplete input text, using selected item.
         this.input.value = match.name;
       }
 
@@ -193,26 +165,27 @@ class Autocomplete {
   }
 
   generateOverlayContent(value, match) {
-    // Splice user input and remainder of first match.
     let end = match.name.substr(value.length);
     return value + end;
   }
 
   reset() {
-    // Hide overlay
     this.visible = false;
     this.matches = [];
     this.bestMatchIndex = null;
     this.selectedIndex = null;
     this.previousValue = null;
 
-    // Clean up. Otherwise results from the first letter will persist.
     this.draw();
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.querySelector('input');
   const url = '/countries?matching=';
-  const autocomplete = new Autocomplete(input, url);
+
+  const input1 = document.querySelector('input[name="country1"]');
+  const autocomplete1 = new Autocomplete(input1, url);
+
+  const input2 = document.querySelector('input[name="country2"]');
+  const autocomplete2 = new Autocomplete(input2, url);
 });

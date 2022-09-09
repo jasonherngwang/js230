@@ -39,10 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault();
 
     let form = event.target;
-    let data = new FormData(form);
 
     let request = new XMLHttpRequest();
-
     request.open('POST', ENDPOINT + form.getAttribute('action'));
     // Don't do this! Simple strings are insecure.
     request.setRequestHeader('Authorization', 'token AUTH_TOKEN');
@@ -51,6 +49,35 @@ document.addEventListener('DOMContentLoaded', () => {
       'load',
       (event) => (store.innerHTML = request.response)
     );
+
+    // Prepare form data
+
+    // Option 1: Manual URL encoding
+    // request.setRequestHeader(
+    //   'Content-Type',
+    //   'application/x-www-form-urlencoded'
+    // );
+
+    // let formFields = [...form.elements].filter(
+    //   (elem) => elem.type !== 'submit'
+    // );
+    // let data = formFields
+    //   .map(
+    //     (elem) =>
+    //       encodeURIComponent(elem.name) + '=' + encodeURIComponent(elem.value)
+    //   )
+    //   .join('&');
+
+    // Option 2: FormData and JSON
+    // request.setRequestHeader('Content-Type', 'application/json');
+    // let data = {};
+    // let formData = new FormData(form);
+    // [...formData.entries()].forEach(([key, val]) => (data[key] = val));
+    // data = JSON.stringify(data);
+    // console.log(data);
+
+    // Option 3: FormData and multipart
+    let data = new FormData(form);
 
     request.send(data);
   });

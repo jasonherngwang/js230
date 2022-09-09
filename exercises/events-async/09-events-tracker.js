@@ -1,10 +1,8 @@
 /*
 track(callback)
-- Returns function that
-  - Adds event to tracker object
-  - Executes callback
-
-
+- Returns function that performs the same action as the original callback, but
+  only after logging the event first.
+- Add stopPropagation so the background colors correspond to what is clicked.
 */
 
 'use strict';
@@ -40,6 +38,7 @@ function track(callback) {
   return (event) => {
     event.stopPropagation();
     tracker.add(event);
+    console.log(tracker.list());
     callback(event);
   };
 }
@@ -58,6 +57,13 @@ divBlue.addEventListener(
   'click',
   track((event) => (document.body.style.background = 'blue'))
 );
+// divBlue.addEventListener(
+//   'click',
+//   track((event) => {
+//     event.stopPropagation();
+//     document.body.style.background = 'blue';
+//   })
+// );
 
 divOrange.addEventListener(
   'click',

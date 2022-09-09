@@ -1,11 +1,5 @@
 function formDataToJson(formData) {
-  const json = {};
-
-  for (const [key, val] of formData.entries()) {
-    json[key] = val;
-  }
-
-  return JSON.stringify(json);
+  return JSON.stringify(Object.fromEntries(formData));
 }
 
 // Using XHR
@@ -16,13 +10,17 @@ function formDataToJson(formData) {
 //     event.preventDefault();
 
 //     const formData = new FormData(form);
-//     // const json = formDataToJson(formData);
 
 //     const request = new XMLHttpRequest();
 //     request.open('POST', form.action);
-//     // request.setRequestHeader('Content-Type', 'application/json');
-//     // request.send(json);
-//     request.send(formData);
+
+//     // Send multipart form
+//     // request.send(formData);
+
+//     // Send JSON
+//     const json = formDataToJson(formData);
+//     request.setRequestHeader('Content-Type', 'application/json');
+//     request.send(json);
 
 //     request.addEventListener('load', () => {
 //       switch (request.status) {
@@ -38,7 +36,7 @@ function formDataToJson(formData) {
 //   });
 // });
 
-// // Using fetch
+// Using fetch
 // document.addEventListener('DOMContentLoaded', () => {
 //   const form = document.querySelector('form');
 
@@ -69,27 +67,26 @@ function formDataToJson(formData) {
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const formData = formDataToJson(new FormData(form));
+    const formJson = formDataToJson(new FormData(form));
 
-    (async () => {
-      const response = await fetch(form.action, {
-        method: 'post',
-        headers: {
-          'Content-type': 'application/json; charset=utf-8',
-        },
-        body: formData,
-      });
+    const response = await fetch(form.action, {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json; charset=utf-8',
+      },
+      body: formJson,
+    });
 
-      if (response.ok) {
-        const result = await response.json();
-        alert(`Successfully created staff with id: ${result.id}`);
-      } else {
-        const text = await response.text();
-        alert(text);
-      }
-    })();
+    if (response.ok) {
+      const result = await response.json();
+      alert(`Successfully created staff with id: ${result.id}`);
+      form.reset();
+    } else {
+      const text = await response.text();
+      alert(text);
+    }
   });
 });

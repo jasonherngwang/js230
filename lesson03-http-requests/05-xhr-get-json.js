@@ -1,6 +1,7 @@
 const ENDPOINT = 'https://api.github.com/repos/rails/rails';
 
 let request = new XMLHttpRequest();
+request.open('GET', ENDPOINT);
 request.responseType = 'json';
 
 request.addEventListener('load', (event) => {
@@ -13,5 +14,4 @@ request.addEventListener('error', (event) => {
   console.log('The request could not be completed!');
 });
 
-request.open('GET', ENDPOINT);
 request.send();

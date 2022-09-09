@@ -1,4 +1,6 @@
 /*
+Uses XHR
+
 Upon page load, use fetch to retrieve all staff.
 - This will be used in the display value for the schedules drop-down.
 
@@ -18,7 +20,7 @@ Add event listener to form submission:
 - Error 404 Not Found
   - If ScheduleNotFound Error, display alert with response text.
   - If StudentNotFound Error:
-    - Call helper function to render a new student form. Append to DOM.
+    - Call helper function to show the new student form. Append to DOM.
     - Prefill the booking sequence value.
     - On submission:
       - Create the student by making a POST request
@@ -27,21 +29,23 @@ Add event listener to form submission:
           - Create the booking
           - Display alert message.
           - Clear form.
-          - Remove Add Student form.
+          - Hide Add Student form.
         - If error, display the error message.
   */
 
 document.addEventListener('DOMContentLoaded', () => {
   let schedules;
   let staffs;
+
   const addScheduleForm = document.querySelector('#add_schedule');
   const addStudentDiv = document.querySelector('#student_details');
   const addStudentForm = document.querySelector('#add_student');
   const select = document.querySelector('#id');
 
-  const fetchJson = (path) => fetch(path).then((response) => response.json());
+  const formDataToJson = (formData) => Object.fromEntries(formData);
 
-  const createOptions = (schedules, staff) => {
+  // List of drop down items
+  const createOptions = (schedules) => {
     const options = [];
 
     schedules.forEach(({ id, staff_id, date, time }) => {
@@ -55,59 +59,72 @@ document.addEventListener('DOMContentLoaded', () => {
     return options;
   };
 
-  const populateOptions = async () => {
-    schedules = await fetchJson('/api/schedules');
-    staffs = await fetchJson('/api/staff_members');
+  // Create select element
+  const populateOptions = () => {
+    const schedulesRequest = new XMLHttpRequest();
+    schedulesRequest.open('GET', 'api/schedules');
+    schedulesRequest.responseType = 'json';
 
-    schedules = schedules.filter((schedule) => !schedule.student_email);
+    schedulesRequest.addEventListener('load', () => {
+      schedules = schedulesRequest.response;
+      schedules = schedules.filter((schedule) => !schedule.student_email);
 
-    const options = createOptions(schedules, staffs);
+      const staffsRequest = new XMLHttpRequest();
+      staffsRequest.open('GET', '/api/staff_members');
+      staffsRequest.responseType = 'json';
 
-    while (select.firstChild) select.firstChild.remove();
+      // Callback hell begins
+      staffsRequest.addEventListener('load', () => {
+        staffs = staffsRequest.response;
 
-    options.forEach(({ schedule, id }) => {
-      const option = document.createElement('option');
-      option.value = id;
-      option.textContent = schedule;
-      select.appendChild(option);
-    });
-  };
+        const options = createOptions(schedules, staffs);
 
-  const formDataToJson = (formData) => {
-    const json = {};
+        while (select.firstChild) select.firstChild.remove();
 
-    for (const [key, val] of formData) {
-      json[key] = val;
-    }
+        options.forEach(({ schedule, id }) => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.textContent = schedule;
+          select.append(option);
+        });
+      });
 
-    return json;
-  };
-
-  const createBooking = async (formData) => {
-    const response = await fetch('/api/bookings', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-      body: JSON.stringify(formData),
+      staffsRequest.send();
     });
 
-    if (response.status === 204) {
-      alert('Booked');
-      addScheduleForm.reset();
-      populateOptions();
-    } else {
-      const responseText = await response.text();
+    schedulesRequest.send();
+  };
 
-      if (responseText.includes('booking_sequence')) {
-        const components = responseText.split(' ');
-        const bookingSequence = components[components.length - 1];
+  const createBooking = (formData) => {
+    const bookingsRequest = new XMLHttpRequest();
+    bookingsRequest.open('POST', '/api/bookings');
+    bookingsRequest.setRequestHeader(
+      'Content-Type',
+      'application/json; charset=utf-8'
+    );
 
-        showStudentForm(bookingSequence);
+    bookingsRequest.addEventListener('load', (event) => {
+      const response = event.target;
+
+      if (response.status === 204) {
+        alert('Booked');
+        addScheduleForm.reset();
+        populateOptions();
       } else {
-        alert(responseText);
+        const responseText = response.responseText;
+
+        if (responseText.includes('booking_sequence')) {
+          const components = responseText.split(' ');
+          const bookingSequence = components[components.length - 1];
+
+          showStudentForm(bookingSequence);
+        } else {
+          alert(responseText);
+        }
       }
-    }
+    });
+
+    bookingsRequest.send(JSON.stringify(formData));
   };
 
   const showStudentForm = (bookingSequence) => {
@@ -115,16 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addStudentDiv.removeAttribute('hidden');
     bookingSequenceInput.value = bookingSequence;
-  };
-
-  const addStudent = (formData) => {
-    return fetch('/api/students', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-      body: JSON.stringify(formData),
-    });
   };
 
   populateOptions();
@@ -141,10 +148,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const studentData = formDataToJson(new FormData(addStudentForm));
 
-    addStudent(studentData).then(async (response) => {
-      const responseText = await response.text();
+    const studentsRequest = new XMLHttpRequest();
+    studentsRequest.open('POST', '/api/students');
+    studentsRequest.setRequestHeader(
+      'Content-Type',
+      'application/json; charset=utf-8'
+    );
 
-      if (response.ok) {
+    studentsRequest.addEventListener('load', (event) => {
+      const response = event.target;
+
+      if (response.status === 201) {
+        const responseText = response.responseText;
         alert(responseText);
         const scheduleData = formDataToJson(new FormData(addScheduleForm));
         // Update with newly-created student's email
@@ -156,5 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert(responseText);
       }
     });
+
+    studentsRequest.send(JSON.stringify(studentData));
   });
 });

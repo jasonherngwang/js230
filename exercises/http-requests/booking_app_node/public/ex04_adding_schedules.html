@@ -5,11 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="/javascripts/adding-schedules.js"></script>
+    <script src="javascripts/ex04-adding-schedules.js"></script>
   </head>
   <body>
     <input type="submit" id="add_button" value="Add Schedule">
-    <div id="schedules"></div>
-    <input type="submit" id="submit_button" value="Submit">
+    <form method="post" action="api/schedules">
+      <div id="schedules"></div>
+      <input type="submit" id="submit_button" value="Submit">
+    </form>
   </body>
 </html>

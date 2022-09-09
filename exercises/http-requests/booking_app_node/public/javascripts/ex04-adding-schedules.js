@@ -2,13 +2,11 @@
 Setup
 - Query /api/staff_members for a list of staff.
 - Use this list to populate the drop-down menus.
+- Create a function that builds a fieldset
 
-Creating a form
-- Create a function that creates a form
-
-Submitting all forms
-- For each form, serialize the FormData into JSON. Aggregate data from all forms
-  into the format required by the API.
+Submitting the form
+- For each fieldset, serialize the data into JSON. Aggregate data from
+  fieldsets into the format required by the API.
 - Validation checks
   - Use regex to check format of Date and Time fields.
   - If any checks fail, alert.
@@ -28,17 +26,16 @@ Data format
 */
 
 // Create form elements
-async function createForm() {
+async function createFieldset(id) {
   const staffOptions = await fetch('api/staff_members').then((response) =>
     response.json()
   );
 
-  const form = document.createElement('form');
-  form.action = 'api/schedules';
-  form.method = 'post';
+  const fieldset = document.createElement('fieldset');
+  fieldset.id = id;
 
-  const h1 = document.createElement('h1');
-  h1.textContent = 'Schedule ';
+  const legend = document.createElement('legend');
+  legend.textContent = `Schedule ${id}`;
 
   const dl = document.createElement('dl');
 
@@ -52,7 +49,7 @@ async function createForm() {
     const option = document.createElement('option');
     option.value = staff.id;
     option.textContent = staff.name;
-    selectStaff.appendChild(option);
+    selectStaff.append(option);
   });
 
   const labelDate = document.createElement('label');
@@ -67,26 +64,17 @@ async function createForm() {
   inputTime.name = 'time';
   inputTime.type = 'text';
 
-  // form.appendChild(h1);
-  form.appendChild(dl);
-  dl.appendChild(document.createElement('dt')).appendChild(labelName);
-  dl.appendChild(document.createElement('dd')).appendChild(selectStaff);
-  dl.appendChild(document.createElement('dt')).appendChild(labelDate);
-  dl.appendChild(document.createElement('dd')).appendChild(inputDate);
-  dl.appendChild(document.createElement('dt')).appendChild(labelTime);
-  dl.appendChild(document.createElement('dd')).appendChild(inputTime);
+  dl.appendChild(document.createElement('dt')).append(labelName);
+  dl.appendChild(document.createElement('dd')).append(selectStaff);
+  dl.appendChild(document.createElement('dt')).append(labelDate);
+  dl.appendChild(document.createElement('dd')).append(inputDate);
+  dl.appendChild(document.createElement('dt')).append(labelTime);
+  dl.appendChild(document.createElement('dd')).append(inputTime);
 
-  return form;
-}
+  fieldset.append(legend);
+  fieldset.append(dl);
 
-function formDataToJson(formData) {
-  const json = {};
-
-  for (const [key, val] of formData.entries()) {
-    json[key] = val;
-  }
-
-  return json;
+  return fieldset;
 }
 
 function validDate(dateStr) {
@@ -97,36 +85,45 @@ function validTime(timeStr) {
   return /^\d{2}:\d{2}$/.test(timeStr);
 }
 
-function validFormData(formData) {
-  return validDate(formData.get('date')) && validTime(formData.get('time'));
+function validFieldsetData(fieldset) {
+  const date = fieldset.querySelector('input[name="date"]').value;
+  const time = fieldset.querySelector('input[name="time"]').value;
+  return validDate(date) && validTime(time);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const form = document.querySelector('form');
   const scheduleDiv = document.querySelector('#schedules');
   const addButton = document.querySelector('#add_button');
-  const submitButton = document.querySelector('#submit_button');
 
-  scheduleDiv.appendChild(await createForm());
+  scheduleDiv.append(await createFieldset(1));
 
   addButton.addEventListener('click', async (event) => {
     event.preventDefault();
-    const newForm = await createForm();
-    scheduleDiv.appendChild(newForm);
+
+    let id = scheduleDiv.querySelectorAll('fieldset').length + 1;
+    const newFieldset = await createFieldset(id);
+    scheduleDiv.append(newFieldset);
   });
 
-  submitButton.addEventListener('click', (event) => {
+  form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const forms = [...scheduleDiv.querySelectorAll('form')];
+    let payload;
 
-    if (forms.some((form) => !validFormData(new FormData(form)))) {
+    const fieldsets = [...scheduleDiv.querySelectorAll('fieldset')];
+
+    if (!fieldsets.every((fieldset) => validFieldsetData(fieldset))) {
       alert('Invalid form data!');
     } else {
-      const formData = forms.map((form) => {
-        return formDataToJson(new FormData(form));
+      payload = fieldsets.map((fieldset) => {
+        const staff_id = fieldset.id;
+        const date = fieldset.querySelector('input[name="date"]').value;
+        const time = fieldset.querySelector('input[name="time"]').value;
+        return { staff_id, date, time };
       });
 
-      const payload = JSON.stringify({ schedules: formData });
+      payload = JSON.stringify({ schedules: payload });
 
       (async () => {
         const response = await fetch('api/schedules', {
@@ -140,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (response.ok) {
           const result = await response.text();
           alert(result);
-          forms.forEach((form) => form.reset());
+          form.reset();
           while (scheduleDiv.children.length > 1) {
             scheduleDiv.lastElementChild.remove();
           }
