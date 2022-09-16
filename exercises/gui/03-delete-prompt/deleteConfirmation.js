@@ -1,5 +1,5 @@
 // From Bob Rodes solution
-const todo_items = [
+const todoItems = [
   { id: 1, title: 'Homework' },
   { id: 2, title: 'Shopping' },
   { id: 3, title: 'Calling Mom' },
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.querySelector('#modal');
 
   // Add todos
-  todo_items.forEach((todo) => {
+  todoItems.forEach((todo) => {
     const li = document.createElement('li');
     li.setAttribute('data-id', todo.id);
     li.textContent = todo.title;
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteLink = document.createElement('a');
     deleteLink.setAttribute('href', '#');
     deleteLink.textContent = 'Delete';
-    li.appendChild(deleteLink);
+    li.append(deleteLink);
 
     deleteLink.addEventListener('click', (e) => {
       e.preventDefault();

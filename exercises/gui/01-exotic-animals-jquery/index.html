@@ -5,25 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
       integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script src="templates/photo.precompiled.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
     <script src="javascript/animals.js"></script>
   </head>
-  <body class="bg-[#333355] p-4 md:p-8">
-    <h1 class="text-3xl font-bold text-center text-white">Exotic Animals</h1>
-    <section class="mt-12">
-      <ul
-        id="photos"
-        class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8"
-      ></ul>
+  <body>
+    <section>
+      <h1>Exotic Animals</h1>
+      <ul id="photos" class="photos"></ul>
     </section>
+    <script id="photo_template" type="text/x-handlebars">
+      <li>
+        <figure>
+          <img src="{{src}}" />
+          <figcaption>
+            {{ description }}
+          </figcaption>
+        </figure>
+      </li>
+    </script>
   </body>
 </html>

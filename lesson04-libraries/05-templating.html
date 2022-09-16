@@ -42,13 +42,17 @@
       {{/each}}
     </script>
     <script>
-      // Retrieve and compile templates into functions.
-      let productTemplate = Handlebars.compile($('#productTemplate').html());
-      let productsList = Handlebars.compile($('#productsList').html());
+      // Retrieve by ID and compile templates into functions.
+      const productTemplate = Handlebars.compile($('#productTemplate').html());
+      const productsList = Handlebars.compile($('#productsList').html());
+      
       // Register template as partial.
-      Handlebars.registerPartial('productTemplate', $('#productTemplate').html());
+      Handlebars.registerPartial(
+        'productTemplate',
+        $('#productTemplate').html()
+      );
 
-      let products = [
+      const products = [
         {
           name: 'Banana',
           quantity: 14,
@@ -61,16 +65,16 @@
         },
       ];
 
-      let $list = $('ul');
+      const $list = $('ul');
 
-      // Pass context as argument to Handlebars functions. Replace HTML of <ul>.
+      // Pass context object as argument to Handlebars functions. Replace HTML of <ul>.
       $list.html(productsList({ items: products }));
 
-      let newProduct = {
+      const newProduct = {
         name: 'Soup',
         quantity: 1,
-        price: 1.29
-      }
+        price: 1.29,
+      };
 
       $list.append(productTemplate(newProduct));
     </script>

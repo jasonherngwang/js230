@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="stylesheets/reset.css" />
+    <link rel="stylesheet" href="stylesheets/styles.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
+      integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="javascript/quiz.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Quiz</h1>
+    </header>
+    <form>
+      <section class="questions"></section>
+      <div class="buttons">
+        <button type="submit">Submit</button>
+        <button type="reset" disabled>Reset</button>
+      </div>
+    </form>
+
+    <script
+      id="questions"
+      class="handlebars"
+      type="text/x-handlebars"
+      data-template-type="template"
+    >
+      {{#each questions}}
+      {{> question}}
+      {{/each}}
+    </script>
+
+    <script
+      id="question"
+      class="handlebars"
+      type="text/x-handlebars"
+      data-template-type="partial"
+    >
+      <article class='question' data-question-num='{{id}}'>
+        <p class='question-text'>Q{{id}}. {{{description}}}</p>
+        <fieldset>
+          <ul>
+            {{#each options}}
+            <li class='answer'>
+              <input type='radio' name='{{../id}}' value='{{this}}' />
+              <label for=''>{{this}}</label>
+            </li>
+            {{/each}}
+          </ul>
+        </fieldset>
+        <p class="result"></p>
+      </article>
+    </script>
+  </body>
+</html>

@@ -1,71 +1,135 @@
 document.addEventListener('DOMContentLoaded', () => {
   const MESSAGES = {
+    invalidFirstName: 'Please enter a valid First Name.',
+    invalidLastName: 'Please enter a valid Last Name.',
     formHasError: 'Form cannot be submitted until errors are corrected.',
-    invalidEmail: 'Please Enter a valid Email.',
+    invalidEmail: 'Please enter a valid Email.',
     passwordTooShort: 'Password must be at least 10 characters long.',
-    invalidPhone: 'Please Enter a valid Phone Number.',
+    invalidPhone: 'Please enter a valid Phone Number.',
+    invalidCreditCardNumber: 'Please enter a valid credit card number.',
   };
 
   const form = document.querySelector('form');
+
+  const inputs = [...document.querySelectorAll('input')];
   const firstName = document.querySelector('#first_name');
   const lastName = document.querySelector('#last_name');
-  const email = document.querySelector('#email');
-  const password = document.querySelector('#password');
   const phone = document.querySelector('#phone');
+  const creditCard = document.querySelector('#credit_card');
+  const creditCardInputs = [
+    ...creditCard.querySelectorAll('input[name="credit_card"]'),
+  ];
 
   function addErrorMessage(element, message) {
-    const span = document.createElement('span');
-    span.textContent = message;
-    span.classList.add('error');
-    element.after(span);
+    element.parentElement.querySelector('span.error').textContent = message;
   }
 
   function removeErrorMessage(element) {
-    while (element.nextElementSibling.tagName === 'SPAN') {
-      element.nextElementSibling.remove();
-    }
+    element.parentElement.querySelector('span.error').textContent = '';
   }
 
-  // Clear error messages on focus
-  [firstName, lastName, email, password, phone].forEach((field) => {
-    field.addEventListener('focus', (e) => {
-      field.classList.remove('error');
-      removeErrorMessage(field);
+  inputs.forEach((input) => {
+    // Clear errors on focus
+    input.addEventListener('focus', (e) => {
+      input.classList.remove('error');
+      removeErrorMessage(input);
     });
-  });
 
-  // Add error message and field highlight
-  [firstName, lastName, email, password].forEach((field) => {
-    field.addEventListener('blur', (e) => {
-      const fieldName = field.labels[0].textContent;
-      if (field.validity.valueMissing) {
-        field.classList.add('error');
-        addErrorMessage(field, `${fieldName} is a required field.`);
+    // Check for errors on blur
+    input.addEventListener('blur', (e) => {
+      input.checkValidity(); // Fires invalid event on element
+    });
+
+    // Handle invalid input
+    input.addEventListener('invalid', (e) => {
+      // Access `name` attribute of associated label
+      const fieldName = input.labels[0].textContent.trim();
+      const validity = input.validity;
+
+      // Error styling for input
+      input.classList.add('error');
+
+      if (validity.valueMissing) {
+        addErrorMessage(input, `${fieldName} is a required field.`);
+      } else if (validity.patternMismatch) {
+        switch (fieldName) {
+          case 'First Name':
+            addErrorMessage(input, MESSAGES.invalidFirstName);
+            break;
+          case 'Last Name':
+            addErrorMessage(input, MESSAGES.invalidLastName);
+            break;
+          case 'Email':
+            addErrorMessage(input, MESSAGES.invalidEmail);
+            break;
+          case 'Phone Number':
+            addErrorMessage(input, MESSAGES.invalidPhone);
+            break;
+        }
+      } else if (validity.tooShort) {
+        // password field
+        addErrorMessage(input, MESSAGES.passwordTooShort);
       }
     });
   });
 
-  // Format validations
-  email.addEventListener('blur', (e) => {
-    if (email.validity.patternMismatch) {
-      email.classList.add('error');
-      addErrorMessage(email, MESSAGES.invalidEmail);
-    }
+  // Character blocking input
+  function charblockingHandler(elem, pattern) {
+    const ALLOWED_KEYS = ['Tab', 'Backspace', 'Shift', 'Meta', 'Alt'];
+    const regex = new RegExp(pattern, 'i');
+
+    return function (e) {
+      const key = e.key;
+      if (!(ALLOWED_KEYS.includes(key) || regex.test(key))) {
+        e.preventDefault();
+      }
+    };
+  }
+
+  [firstName, lastName].forEach((input) =>
+    input.addEventListener('keydown', charblockingHandler(input, "[a-z'\\s]"))
+  );
+
+  phone.addEventListener('keydown', charblockingHandler(phone, '[-\\d]'));
+
+  creditCardInputs.forEach((input) => {
+    input.addEventListener('keydown', charblockingHandler(input, '[\\d]'));
+
+    input.addEventListener('keyup', (e) => {
+      const parent = input.parentElement;
+      let index = [...parent.children].indexOf(input);
+      if (e.key === 'Tab' || e.key === 'Shift') {
+      } else if (input.value.length === 4 && index < 3) {
+        input.nextElementSibling.focus();
+      }
+    });
+
+    input.addEventListener('blur', (e) => {
+      if (creditCardInputs.some((input) => input.validity.patternMismatch)) {
+        addErrorMessage(
+          creditCard.lastElementChild,
+          MESSAGES.invalidCreditCardNumber
+        );
+      }
+    });
   });
 
-  password.addEventListener('blur', (e) => {
-    if (password.validity.tooShort) {
-      password.classList.add('error');
-      addErrorMessage(password, MESSAGES.passwordTooShort);
-    }
-  });
+  function gatherFormData() {
+    const data = {};
+    const formDataString = [];
 
-  phone.addEventListener('blur', (e) => {
-    if (phone.validity.patternMismatch) {
-      phone.classList.add('error');
-      addErrorMessage(phone, MESSAGES.invalidPhone);
+    inputs.forEach((input) => {
+      data[input.name] = data[input.name] || [];
+      data[input.name].push(input.value);
+    });
+
+    for (let name of Object.keys(data)) {
+      data[name] = data[name].join('-');
+      formDataString.push(`${name}=${data[name]}`);
     }
-  });
+
+    return encodeURIComponent(formDataString.join(''));
+  }
 
   // Form submit validation
   form.addEventListener('submit', (e) => {
@@ -76,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
       formError.textContent = MESSAGES.formHasError;
     } else {
       formError.textContent = '';
+      console.log(gatherFormData());
     }
   });
 });

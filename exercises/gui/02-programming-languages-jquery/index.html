@@ -32,10 +32,28 @@
         color: white;
       }
     </style>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"
+      integrity="sha512-RNLkV3d+aLtfcpEyFG8jRbnWHxUqVZozacROI4J2F1sTaDqo1dPQYs01OMi1t1w9Y2FdbSCDSQ2ZVdAC8bzgAg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
     <script src="languages.js"></script>
   </head>
   <body>
     <h1>Programming Languages</h1>
     <ul id="languages_list"></ul>
+    <script id="language_template" type="text/x-handlebars">
+      <li>
+        <h2>{{name}}</h2>
+        <p>{{description}}</p>
+        <a>Show More</a>
+      </li>
+    </script>
   </body>
 </html>

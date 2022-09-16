@@ -6,12 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      /* label {
-        display: block;
-      } */
+      form {
+        width: 100%;
+        max-width: 800px;
+      }
+      h1 {
+        font-family: Helvetica, Arial, sans-serif;
+      }
+      label {
+        font-family: Helvetica, Arial, sans-serif;
+      }
       input {
         width: 30ch;
         margin-bottom: 32px;
+        padding: 4px;
+        border-radius: 4px;
+        border: 1px solid grey;
+      }
+      .inline {
+        width: 4ch;
+        display: inline-block;
       }
       dd {
         margin-left: 0;
@@ -37,11 +51,25 @@
         <dl>
           <dt><label for="first_name">First Name</label></dt>
           <dd>
-            <input type="text" name="first_name" id="first_name" required />
+            <input
+              type="text"
+              name="first_name"
+              id="first_name"
+              required
+              pattern="[a-zA-Z'\s]+"
+            />
+            <span class="error"></span>
           </dd>
           <dt><label for="last_name"> Last Name </label></dt>
           <dd>
-            <input type="text" name="last_name" id="last_name" required />
+            <input
+              type="text"
+              name="last_name"
+              id="last_name"
+              required
+              pattern="[a-zA-Z'\s]+"
+            />
+            <span class="error"></span>
           </dd>
           <dt><label for="email"> Email </label></dt>
           <dd>
@@ -53,6 +81,7 @@
               required
               pattern="^.+@.+$"
             />
+            <span class="error"></span>
           </dd>
           <dt><label for="password"> Password </label></dt>
           <dd>
@@ -63,6 +92,7 @@
               required
               minlength="10"
             />
+            <span class="error"></span>
           </dd>
           <dt><label for="phone"> Phone Number </label></dt>
           <dd>
@@ -73,11 +103,55 @@
               placeholder="111-222-3333"
               pattern="^\d{3}-\d{3}-\d{4}$"
             />
+            <span class="error"></span>
+          </dd>
+          <dt><label for="credit_card">Credit Card Number</label></dt>
+          <dd id="credit_card">
+            <input
+              class="inline"
+              type="text"
+              name="credit_card"
+              placeholder="1111"
+              pattern="^\d{4}$"
+              maxlength="4"
+            />
+            -
+            <input
+              class="inline"
+              type="text"
+              name="credit_card"
+              placeholder="2222"
+              pattern="^\d{4}$"
+              maxlength="4"
+            />
+            -
+            <input
+              class="inline"
+              type="text"
+              name="credit_card"
+              placeholder="3333"
+              pattern="^\d{4}$"
+              maxlength="4"
+            />
+            -
+            <input
+              class="inline"
+              type="text"
+              name="credit_card"
+              placeholder="4444"
+              pattern="^\d{4}$"
+              maxlength="4"
+            />
+            <span class="error"></span>
           </dd>
         </dl>
       </fieldset>
 
       <button type="submit">Sign Up</button>
     </form>
+    <section>
+      <h1>Serialized Form</h1>
+      <p id="serialized-data"></p>
+    </section>
   </body>
 </html>

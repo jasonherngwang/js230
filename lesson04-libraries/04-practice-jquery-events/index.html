@@ -39,8 +39,7 @@
         $form.submit(function (e) {
           e.preventDefault();
 
-          let $input = $('#key');
-          let char = $input.val();
+          let char = $('#key').val();
           alert('New key: ' + char);
 
           // Unbind and new bind
@@ -48,7 +47,7 @@
             .off('keypress')
             .keypress(function (e) {
               if (e.key !== char) return;
-
+              // Trigger an event on another element.
               $('a').trigger('click');
             });
         });
@@ -56,8 +55,7 @@
         $('a').click(function (e) {
           e.preventDefault();
           
-          let $accordion = $('#accordion');
-          $accordion.slideToggle('fast');
+          $('#accordion').slideToggle('fast');
         });
       });
     </script>
