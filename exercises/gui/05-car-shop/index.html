@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Shop</title>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+    <script src="javascript/jquery-3.6.1.min.js"></script>
+    <script src="javascript/handlebars-v4.7.7.js"></script>
+    <script src="javascript/carshop.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Buy Used Cars</h1>
+      <form id="filters">
+        <label for="make">Make</label>
+        <select id="make" name="make">
+          <option value="All">Any</option>
+        </select>
+        <label for="model">Model</label>
+        <select id="model" name="model">
+          <option value="All">Any</option>
+        </select>
+        <label for="price">Price</label>
+        <select id="price" name="price">
+          <option value="All">All</option>
+        </select>
+        <label for="year">Year</label>
+        <select id="year" name="year">
+          <option value="All">All</option>
+        </select>
+        <button id="filterButton" type="submit">Filter</button>
+      </form>
+    </header>
+    <main></main>
+    <script id="cars_template" type="text/x-handlebars">
+      {{#each cars}}
+      <div class="card">
+        <img src="{{image}}" alt="">
+        <p><strong>{{make}} {{model}}</strong></p>
+        <p>Year: {{year}}</p>
+        <p>Price: ${{price}}</p>
+        <a href="#">Buy</a>
+      </div>
+      {{/each}}
+    </script>
+  </body>
+</html>

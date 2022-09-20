@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fade In/Out, Show/Hide, Stop</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      div {
+        width: 200px;
+        height: 200px;
+      }
+      #red {
+        background-color: red;
+      }
+      #blue {
+        background-color: blue;
+      }
+      #green {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="red"></div>
+    <div id="blue"></div>
+    <button id="show">Show/Hide Blue</button>
+    <button id="fade">Fade Out/In Blue</button>
+    <button id="stop">Stop</button>
+    <div id="green"></div>
+  </body>
+  <script>
+    $(() => {
+      const $buttonShow = $('#show');
+      const $buttonFade = $('#fade');
+
+      const $blue = $('#blue');
+      const $stop = $('#stop');
+
+      $buttonShow.click(e => {
+        if ($blue.css('display') === 'none') {
+          $blue.show();
+        } else {
+          $blue.hide();
+        }
+      })
+
+      $buttonFade.click(e => {
+        if ($blue.css('display') === 'none') {
+          $blue.fadeIn();
+        } else {
+          $blue.fadeOut(2000);
+        }
+      })
+
+      $stop.click(e => $blue.stop())
+    });
+  </script>
+</html>

@@ -17,17 +17,21 @@
     ></script>
     <script>
       $(() => {
-        // // Practice
-        // // Select by custom data attribute
+        // Practice
+        // Select by custom data attribute
         // let $a = $('a[data-block=gold]');
         // console.log($a.attr('data-block')); // gold
-        // // Use .data() as getter.
+        // Use .data() as getter.
         // console.log($a.data('block')); // gold
+        // Using dataset property
+        // console.log($a.get(0).dataset.block);
 
-        // // .data() as setter. Stores data in separate data store, not as an 
-        // // HTML attribute.
+        // .data() as setter. Stores data in separate data store, not as an 
+        // HTML attribute.
         // $a.data('block', 'silver');
         // console.log($a.attr('data-block')); // gold
+        // If the jQuery data store has something, .data() returns that.
+        // Otherwise it returns the HTML data attribute's data.
         // console.log($a.data('block')); // silver
         
         // $a.attr('data-block', 'red');
@@ -35,11 +39,11 @@
         // console.log($a.data('block')); // silver
         
         // Only show clicked article
-        $('a').click(function(e) {
-          e.preventDefault();
+        // $('a').click(function(e) {
+        //   e.preventDefault();
           
-          $('article').hide().filter('[data-block=' + $(this).attr('data-block') + ']').show();
-        })
+        //   $('article').hide().filter('[data-block=' + $(this).attr('data-block') + ']').show();
+        // })
         
         // Using native DOM API
         let gold = document.getElementById('gold');

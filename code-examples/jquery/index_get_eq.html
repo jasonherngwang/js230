@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>.index(), .get(), .eq()</title>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <ul id="nums">
+      <li id="1">1</li>
+      <li id="2">2</li>
+      <li id="3">3</li>
+    </ul>
+    <ul id="letters">
+      <li id="a">a</li>
+      <li id="b">b</li>
+      <li id="c">c</li>
+    </ul>
+    <form action="">
+      <fieldset>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" />
+        <button type="submit">Submit</button>
+      </fieldset>
+    </form>
+  </body>
+  <script>
+    $(() => {
+      // .index() takes a DOM element or jQ obj and returns a numerical index.
+      const liNode = document.getElementById('2');
+      const liJqObj = $('#2');
+      const liJqObjLetter = $('#b');
+
+      // Index of li among siblings
+      console.log(liJqObj.index()); // 1
+
+      // Index of specifi jQ obj or DOM node, in jQ collection of lis
+      console.log($('li').index(liJqObj)); // 1
+      console.log($('li').index(liNode)); // 1
+
+      // With selector as arg
+      console.log(liJqObjLetter.index()); // 1 (among siblings)
+      console.log(liJqObjLetter.index('li')); // 4 (among all 6 lis)
+
+      console.log($('form').index(':submit')); // -1
+      console.log($('button').index(':submit')); // 0
+
+      // .get() takes an index and returns a DOM element (unwrapped)
+      console.log($('li').get(1)); // <li id="2">2</li>
+      console.log($('li').get(4)); // <li id="b">b</li>
+
+      // .eq() takes an index and returns a jQ obj
+      console.log($('li').eq(1)); // S.fn.init [li#2, prevObject: S.fn.init(6)]
+    });
+  </script>
+</html>
