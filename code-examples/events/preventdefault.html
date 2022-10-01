@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <a href="/">
+      <button>preventDefault, stopPropagation</button>
+    </a>
+    <script>
+      // document.addEventListener('DOMContentLoaded', () => {
+      //   document.querySelector('button').addEventListener('click', (event) => {
+      //     // event.preventDefault();
+      //     alert('Following the link was prevented.');
+      //   });
+
+      //   document.querySelector('a').addEventListener(
+      //     'click',
+      //     (event) => {
+      //       alert('Click event on the anchor tag');
+      //     },
+      //     true
+      //   );
+      // });
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('button').addEventListener('click', (event) => {
+          event.preventDefault();
+          alert('Following the link was prevented.');
+        });
+
+        document.querySelector('a').addEventListener(
+          'click',
+          (event) => {
+            event.stopPropagation();
+            alert('Click event on the anchor tag');
+          },
+          true
+        );
+      });
+    </script>
+  </body>
+</html>
